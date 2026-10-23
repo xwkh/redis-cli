@@ -1,0 +1,49 @@
+{
+  "name": "@xwkh/redis-cli",
+  "version": "0.1.0",
+  "description": "Agent-friendly Redis CLI with an official Node.js client, local credentials and a companion skill",
+  "type": "module",
+  "bin": {
+    "redis-cli": "bin/redis-cli.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xwkh/redis-cli.git"
+  },
+  "homepage": "https://github.com/xwkh/redis-cli#readme",
+  "bugs": {
+    "url": "https://github.com/xwkh/redis-cli/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "redis",
+    "cli",
+    "ai",
+    "agents",
+    "codex"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "skills/",
+    "docs/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "test:integration": "node --test test/integration/*.test.js",
+    "check": "node --check src/cli.js && node --check src/worker.js && npm test",
+    "prepublishOnly": "npm run check"
+  },
+  "dependencies": {
+    "@redis/client": "^6.3.0"
+  }
+}

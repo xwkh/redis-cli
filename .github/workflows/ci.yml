@@ -1,0 +1,22 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run check
+      - name: Build isolated test Redis
+        run: |
+          curl -fsSL https://download.redis.io/releases/redis-7.4.8.tar.gz -o "$RUNNER_TEMP/redis.tar.gz"
+          echo "f6773cb7d63be236c59c2917a82f1f08e47b77d89b2f0c9f53becb22b8ea4172  $RUNNER_TEMP/redis.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/redis.tar.gz" -C "$RUNNER_TEMP"
+          make -C "$RUNNER_TEMP/redis-7.4.8" -j2 MALLOC=libc BUILD_TLS=no redis-server
+          echo "REDIS_CLI_TEST_SERVER=$RUNNER_TEMP/redis-7.4.8/src/redis-server" >> "$GITHUB_ENV"
+      - run: npm run test:integration
+      - run: npm pack --dry-run
